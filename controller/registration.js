@@ -6,23 +6,24 @@ var bcrypt = require('bcryptjs');
 async function registration(req, res) {
   try {
     const { name, email, password } = req.body;
-    const hashedPassword = await bcrypt.hash(password, 10);
-    if(userInfo.findOne({email})) {
-      return res.status(400).send("User already exists");
+    const existingUser = await userInfo.findOne({ email });
+    if(existingUser) {
+      return res.send("User already exists");
+    }else{
+      const hashedPassword = await bcrypt.hash(password, 10);
+      const user = new userInfo({ 
+        name, 
+        email, 
+        password : hashedPassword
+       });
+  
+      const otpResult = await sendOTP(email);
+      await user.save(); 
+  
+      res.status(200).send("User created successfully");
     }
-    const user = new userInfo({ 
-      name, 
-      email, 
-      password : hashedPassword
-     });
 
-    const otpResult = await sendOTP(email);
-    await user.save(); 
-
-
-    res.status(200).send("User created successfully");
   } catch (error) {
-    console.error("Error in registration:", error);
     res.status(500).send(error.message);
   }
 }
