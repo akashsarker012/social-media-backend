@@ -18,7 +18,7 @@ const sendOTP = async (email) => {
     const otp = generateOTP();
     otpMap.set(email, otp);
 
-    await sendEmail(email, otp); // Assuming sendMail is properly defined in sendEmail.js
+    await sendEmail(email, otp); 
 
     return "OTP sent successfully";
   } catch (error) {

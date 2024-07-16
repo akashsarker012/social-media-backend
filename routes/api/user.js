@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.post('/registration', registration);
 router.post('/login', loginController);
-router.get('/currentuser', loginController);
+// router.get('/currentuser', loginController);
 
 router.get('/current-user', verifyToken);
 

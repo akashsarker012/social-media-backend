@@ -35,8 +35,6 @@ async function loginController(req, res) {
             name: user.name,
             profilepic: user.profilepic,
             verified: user.verified,
-            followers: user.followers,
-            following: user.following
         };
         const token = jwt.sign(tokenData, process.env.SECRET_KEY_TOKEN, { expiresIn: '8h' });
         console.log("Token:", token);
