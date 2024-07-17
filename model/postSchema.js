@@ -1,21 +1,21 @@
-// backend\model\postSchema.js
+// backend/model/postSchema.js
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
+// Define the comment schema
 const commentSchema = new Schema({
-    description : {
-        type : String,
-        default : ""
+    description: {
+        type: String,
+        default: ""
     },
-    userId : {
-        type : Schema.Types.ObjectId,
-        required : true,
-        ref : 'users'
+    userId: {
+        type: Schema.Types.ObjectId,
+        required: true,
+        ref: 'User'
     }
-},{
-    timestamps : true
-})
-
+}, {
+    timestamps: true
+});
 
 const postSchema = new Schema({
     description: {
@@ -26,9 +26,10 @@ const postSchema = new Schema({
         type: String,
         default: ""
     },
-    userId: {
-         type: String,
-        default: ""
+    owner: {
+        type: Schema.Types.ObjectId,
+        required: true,
+        ref: 'User'
     },
     like: {
         type: Array,
@@ -39,7 +40,4 @@ const postSchema = new Schema({
     timestamps: true
 });
 
-
-
- module.exports = mongoose.model("posts",postSchema)
-
+module.exports = mongoose.model('Post', postSchema);

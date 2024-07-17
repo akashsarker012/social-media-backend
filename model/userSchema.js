@@ -31,7 +31,8 @@ const userSchema = new Schema({
         default:false,
     },
     post : {
-        type: Array,
+        type: Schema.Types.ObjectId,
+        ref: 'Post',
         default: []
     },
     savedPost : {
