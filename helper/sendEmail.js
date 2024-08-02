@@ -1,26 +1,24 @@
+// helper/sendEmail.js
 const nodemailer = require("nodemailer");
 
-async function sendEmail(email, otp) {
+async function sendEmail(email, subject, template) {
   try {
     const transporter = nodemailer.createTransport({
       service: "Gmail",
       auth: {
-        user: "akashsarkeronline@gmail.com", // Your email address
-        pass: "scqycqoodtlijrqi", // Your email password
+        user: "akashsarkeronline@gmail.com",
+        pass: "scqycqoodtlijrqi",
       },
     });
 
-    const mailOptions = {
-      from: "akashsarkeronline@gmail.com",
+    const info = await transporter.sendMail({
+      from: '"Orebi-ecommerce" <akashsarkeronline@gmail.com>',
       to: email,
-      subject: "OTP Verification",
-      text: `Your OTP for verification is: ${otp}`,
-    };
+      subject: subject,
+      html: template,
+    });
 
-    // Send email
-    const info = await transporter.sendMail(mailOptions);
-    console.log("Email sent: " + info.response);
-    return true; 
+    return true;
   } catch (error) {
     console.error("Error sending email:", error);
     throw new Error("Failed to send OTP");

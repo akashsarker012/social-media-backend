@@ -1,5 +1,6 @@
-const sendEmail = require("../helper/sendEmail");
 
+const emailTemplate = require("../helper/emailTemplate");
+const sendEmail = require("../helper/sendEmail");
 
 const generateOTP = () => {
   const length = 6;
@@ -18,7 +19,10 @@ const sendOTP = async (email) => {
     const otp = generateOTP();
     otpMap.set(email, otp);
 
-    await sendEmail(email, otp); 
+    const subject = "OTP Verification";
+    const template = emailTemplate(otp, email);
+
+    await sendEmail(email, subject, template);
 
     return "OTP sent successfully";
   } catch (error) {

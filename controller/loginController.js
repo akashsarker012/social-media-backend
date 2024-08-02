@@ -1,58 +1,55 @@
-const userInfo = require('../model/userSchema');
-const bcrypt = require('bcryptjs');
-const cookieParser = require('cookie-parser');
-const jwt = require('jsonwebtoken');
+const userInfo = require("../model/userSchema");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+
 async function loginController(req, res) {
-    try {
-        const { email, password } = req.body;
+  const { email, password } = req.body;
+  if (!email) {
+    return res.send({ error: "Email is required" });
+  }
+  if (!password) {
+    return res.send({ error: "Please enter your password" });
+  }
 
-        if (!email || !password) {
-            return res.status(400).send("All fields are required");
-        }
+  try {
+    const existingUser = await userInfo.findOne({ email });
 
-        // Check if user exists
-        const user = await userInfo.findOne({ email });
-        if (!user) {
-            return res.status(400).send("User doesn't exist");
-        }
-
-        // Check if password matches
-        const isPasswordMatch = await bcrypt.compare(password, user.password);
-        if (!isPasswordMatch) {
-            return res.status(400).send("Password doesn't match");
-        }
-
-        // Check if email is verified
-        if (!user.verified) {
-            return res.status(400).send("Please verify your email");
-        }
-        // res.cookie('userToken', user._id.toString(), { httpOnly: true });
-        // console.log('Cookies received:', req.cookies);
-
-        const tokenData = {
-            id: user._id,
-            email: user.email,
-            name: user.name,
-            profilepic: user.profilepic,
-            verified: user.verified,
-        };
-        const token = jwt.sign(tokenData, process.env.SECRET_KEY_TOKEN, { expiresIn: '8h' });
-        console.log("Token:", token);
-
-        // Set token as a cookie
-        res.cookie('token', token, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production', // Set to true in production
-            maxAge: 8 * 60 * 60 * 1000 // 8 hours expiry time in milliseconds
-        });
-
-        // Respond with success message and token
-        return res.json({ token, message: 'Login successfully', success: true });
-
-    } catch (error) {
-        console.error("Error in login:", error);
-        res.status(500).send(error.message);
+    if (!existingUser) {
+      return res.json({ error: "Email is not registered" });
     }
+    if (!existingUser.verified) {
+      return res.json({ error: "Please verify your email before logging in", verified: false });
+    }
+    const isPasswordMatch = await bcrypt.compare(
+      password,
+      existingUser.password
+    );
+    if (!isPasswordMatch) {
+      return res.json({ error: "Incorrect password" });
+    }
+    const tokenData = {
+      id: existingUser._id,
+      email: existingUser.email,
+      name: existingUser.name,
+      profilepic: existingUser.profilepic,
+      verified: existingUser.verified,
+    };
+    const token = jwt.sign(tokenData, process.env.SECRET_KEY_TOKEN, {
+      expiresIn: "8h",
+    });
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production", 
+      maxAge: 8 * 60 * 60 * 1000, 
+    });
+
+    return res.json({ token, message: "Login successfully", success: true });
+  } catch (error) {
+    console.error("Error:", error);
+    return res
+      .status(500)
+      .json({ error: "An error occurred while logging in" });
+  }
 }
 
-module.exports = { loginController }
+module.exports = loginController;

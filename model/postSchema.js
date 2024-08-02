@@ -1,4 +1,3 @@
-// backend/model/postSchema.js
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
@@ -35,9 +34,14 @@ const postSchema = new Schema({
         type: Array,
         default: []
     },
-    comment: [commentSchema]
-}, {
-    timestamps: true
+    comment: [commentSchema],
+    created: {
+        type: Date,
+        default: new Date()
+    },
+    update: {
+        type: Date
+    },
 });
 
 module.exports = mongoose.model('Post', postSchema);
