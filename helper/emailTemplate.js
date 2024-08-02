@@ -1,6 +1,6 @@
 const emailTemplate = (otp, email) => {
   const otpDigits = otp.split("").map((digit) =>
-      `<p style="display: inline-block; padding: 10px; margin: 0 5px; width: 40px; height: 40px; font-size: 24px; font-weight: 500; color: #1E3A8A; border: 1px solid #1E3A8A; border-radius: 0.25rem;">${digit}</p>`
+      `<p style="display: inline-block; text-align: center; padding: 10px; margin: 0 5px; width: 40px; height: 40px; font-size: 24px; font-weight: 500; color: #1E3A8A; border: 1px solid #1E3A8A; border-radius: 0.25rem;">${digit}</p>`
   );
 
   return `
