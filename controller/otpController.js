@@ -22,40 +22,40 @@ const sendOTP = async (email) => {
     const subject = "OTP Verification";
     const template = emailTemplate(otp, email);
     await sendEmail(email, subject, template);
-
     return "OTP sent successfully";
   } catch (error) {
     throw new Error(`Error sending OTP: ${error.message}`);
   }
 };
-const verifyOTP = (email, otp) => {
+const verifyOTP = (email, otp,) => {
   const storedOtp = otpMap.get(email);
 
   if (!storedOtp) {
-    throw new Error("OTP has expired or does not exist.");
+    return { error: "OTP has expired or does not exist." };
+    
   }
 
   if (storedOtp === otp) {
     // otpMap.delete(email);
-    return "OTP verified successfully";
+   return { success: "OTP verified successfully" }
   } else {
-    throw new Error("Invalid OTP.");
+   return { error: "Invalid OTP" };
   }
 };
 
 const verify = async (req, res) => {
   const { email, otp } = req.body;
-  
+
   try {
-    const result =  verifyOTP(email, otp);
+    const result = verifyOTP(email, otp);
     const updateUser = await userSchema.findOneAndUpdate(
-      {email},
-      {verified: true},
-      {new: true}
-     )
-    res.status(200).send(result);
+      { email },
+      { verified: true },
+      { new: true }
+    )
+    res.status(200).send({success: "OTP verified successfully"});
   } catch (error) {
-    res.status(400).send(error.message);
+   return res.status(400).send(error.message);
   }
 };
 

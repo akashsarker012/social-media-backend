@@ -17,9 +17,6 @@ async function loginController(req, res) {
     if (!existingUser) {
       return res.json({ error: "Email is not registered" });
     }
-    if (!existingUser.verified) {
-      return res.json({ error: "Please verify your email before logging in", verified: false });
-    }
     const isPasswordMatch = await bcrypt.compare(
       password,
       existingUser.password
@@ -27,6 +24,10 @@ async function loginController(req, res) {
     if (!isPasswordMatch) {
       return res.json({ error: "Incorrect password" });
     }
+    if (!existingUser.verified) {
+      return res.json({ error: "Please verify your email before logging in", verified: false });
+    }
+    
     const tokenData = {
       id: existingUser._id,
       email: existingUser.email,
