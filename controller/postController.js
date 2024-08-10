@@ -37,14 +37,20 @@ async function postController(req, res, next) {
 }
 
 async function getAllPost(req, res, next) {
-  try {
-      const posts = await Post.find().populate('owner', 'name email profilepic followers following')
-
+    try {
+      const posts = await Post.find().sort({ created : -1})
+        .populate('owner', 'name email profilepic followers following')
+        
+        .populate({
+          path: 'comment.userId',
+          select: 'name email profilepic'
+        });
+  
       res.status(200).send(posts);
-  } catch (error) {
+    } catch (error) {
       res.status(500).send(error.message);
+    }
   }
-}
 
   
   module.exports = { postController, getAllPost };

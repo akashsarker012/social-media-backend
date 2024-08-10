@@ -9,7 +9,6 @@ const cookieParser = require('cookie-parser');
 require('dotenv').config();
 const dbConnection = require('./connectDb/connectDb')
 dbConnection();
-
 app.use(express.json());
 app.use(cors({ origin: true, credentials: true }));
 

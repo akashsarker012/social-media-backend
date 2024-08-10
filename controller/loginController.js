@@ -35,13 +35,11 @@ async function loginController(req, res) {
       profilepic: existingUser.profilepic,
       verified: existingUser.verified,
     };
-    const token = jwt.sign(tokenData, process.env.SECRET_KEY_TOKEN, {
-      expiresIn: "8h",
-    });
+    const token = jwt.sign(tokenData, process.env.SECRET_KEY_TOKEN);
     res.cookie("token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production", 
-      maxAge: 8 * 60 * 60 * 1000, 
+      // maxAge: 8 * 60 * 60 * 1000, 
     });
 
     return res.json({ token, message: "Login successfully", success: true });

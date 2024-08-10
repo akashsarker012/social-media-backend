@@ -30,15 +30,14 @@ const userSchema = new Schema({
     type: Boolean,
     default: false,
   },
-  post: {
+  post:  [{
     type: Schema.Types.ObjectId,
-    ref: 'Post',
-    default: null,
-  },
-  savedPost: {
-    type: Array,
-    default: [],
-  },
+    ref: 'Post'
+}],
+  savedPost: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Post'
+}],
 });
 
 module.exports = mongoose.model('User', userSchema);

@@ -30,10 +30,10 @@ const postSchema = new Schema({
         required: true,
         ref: 'User'
     },
-    like: {
-        type: Array,
-        default: []
-    },
+    like: [{
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    }],
     comment: [commentSchema],
     created: {
         type: Date,
